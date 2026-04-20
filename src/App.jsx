@@ -1,4 +1,4 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import ProtectedRoutes from './components/ProtectedRoutes';
 
 // Admin Pages
@@ -33,79 +33,108 @@ import BlogAdmin from './pages/admin/BlogAdmin';
 import BlogDetail from "./pages/BlogDetail"; 
 import BulkBlogAdmin from "./pages/admin/BulkBlogAdmin";
 
-function App() {
+function AppContent() {
+  const location = useLocation();
+  const isAdminRoute = location.pathname.startsWith('/admin');
+
   return (
-    <Router>
+    <div className="min-h-screen flex flex-col">
       <ScrollToTop />
-      <div className="min-h-screen flex flex-col">
-        {/* Navbar will be hidden on admin routes */}
+      {!isAdminRoute && (
         <Navbar />
-        <main className="flex-grow">
-          <Routes>
-            {/* Public Main Website Routes */}
-            <Route path="/" element={<Home />} />
-            <Route path="/about" element={<About />} />
-            <Route path="/why-jadhavar" element={<WhyJadhavar />} />
-            <Route path="/curriculum" element={<Curriculum />} />
-            <Route path="/academics" element={<Academics />} />
-            <Route path="/admissions" element={<Admissions />} />
-            <Route path="/facilities" element={<FacilitiesPage />} />
+      )}
+      <main className="flex-grow">
+        <Routes>
+          {/* Public Main Website Routes */}
+          <Route path="/" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/why-jadhavar" element={<WhyJadhavar />} />
+          <Route path="/curriculum" element={<Curriculum />} />
+          <Route path="/academics" element={<Academics />} />
+          <Route path="/admissions" element={<Admissions />} />
+          <Route path="/facilities" element={<FacilitiesPage />} />
 
-            <Route path="/life-at-jadhavar" element={<LifeAtJadhavar />} />
-            <Route path="/gallery" element={<Gallery />} />
-            <Route path="/announcements" element={<Announcements />} />
-            <Route path="/career" element={<Career />} />
-            <Route path="/info-center" element={<InfoCenter />} />
-            <Route path="/contact" element={<Contact />} />
-            <Route path="/udan" element={<Navigate to="/udan/1" replace />} />
-            <Route path="/udan/:id" element={<Udan />} />
-            <Route path="/mandatory-public-disclosure" element={<HiddenDocuments />} />
-            <Route path="/blog" element={<Blog />} />
-  <Route path="/blog/:id" element={<BlogDetail />} />
-           <Route path="/admin/blogs/bulk" element={<BulkBlogAdmin />} />
+          <Route path="/life-at-jadhavar" element={<LifeAtJadhavar />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/announcements" element={<Announcements />} />
+          <Route path="/career" element={<Career />} />
+          <Route path="/info-center" element={<InfoCenter />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/udan" element={<Navigate to="/udan/1" replace />} />
+          <Route path="/udan/:id" element={<Udan />} />
+          <Route path="/mandatory-public-disclosure" element={<HiddenDocuments />} />
+          <Route path="/blog" element={<Blog />} />
+          <Route path="/blog/:id" element={<BlogDetail />} />
 
-            {/* Admin Auth Route */}
-            <Route path="/admin/login" element={<AdminLogin />} />
+          {/* Admin Auth Route */}
+          <Route path="/admin/login" element={<AdminLogin />} />
 
-            {/* Protected Admin Routes */}
-            <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
-
-            <Route path="/admin/dashboard" element={
+          {/* Protected Admin Routes */}
+          <Route path="/admin" element={<Navigate to="/admin/dashboard" replace />} />
+          <Route
+            path="/admin/dashboard"
+            element={
               <ProtectedRoutes>
                 <AdminDashboard />
               </ProtectedRoutes>
-            } />
-
-            <Route path="/admin/gallery" element={
+            }
+          />
+          <Route
+            path="/admin/gallery"
+            element={
               <ProtectedRoutes>
                 <GalleryAdmin />
               </ProtectedRoutes>
-            } />
-
-            <Route path="/admin/announcements" element={
+            }
+          />
+          <Route
+            path="/admin/announcements"
+            element={
               <ProtectedRoutes>
                 <AnnouncementAdmin />
               </ProtectedRoutes>
-            } />
-
-            <Route path="/admin/careers" element={
+            }
+          />
+          <Route
+            path="/admin/careers"
+            element={
               <ProtectedRoutes>
                 <CareerAdmin />
               </ProtectedRoutes>
-            } />
-            <Route path="/admin/blogs" element={
+            }
+          />
+          <Route
+            path="/admin/blogs"
+            element={
               <ProtectedRoutes>
                 <BlogAdmin />
               </ProtectedRoutes>
-            } />
+            }
+          />
+          <Route
+            path="/admin/blogs/bulk"
+            element={
+              <ProtectedRoutes>
+                <BulkBlogAdmin />
+              </ProtectedRoutes>
+            }
+          />
 
-            {/* Catch all route - redirect to home */}
-            <Route path="*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </main>
-        {/* Footer will be hidden on admin routes */}
+          {/* Catch all route - redirect to home */}
+          <Route path="*" element={<Navigate to="/" replace />} />
+        </Routes>
+      </main>
+      {!isAdminRoute && (
         <Footer />
-      </div>
+      )}
+    </div>
+  )
+}
+
+function App() {
+  return (
+    <Router>
+      <AppContent />
     </Router>
   )
 }
