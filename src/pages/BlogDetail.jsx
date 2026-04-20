@@ -19,7 +19,7 @@ const BlogDetail = () => {
       </button>
 
       <img
-        src={`https://jadhavar.onrender.com${blog.image}`}
+        src={`https://api.jadhavarinternationalschool.com${blog.image}`}
         className="w-full h-72 object-cover rounded mb-6"
       />
 

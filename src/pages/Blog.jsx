@@ -11,7 +11,7 @@ const Blog = () => {
   // BASE URL SAFE FIX (UNCHANGED)
   const BASE_URL =
     import.meta.env.VITE_API_URL?.replace("/api", "") ||
-    "https://jadhavar.onrender.com";
+    "https://jadhavarinternationalschool.com/api";
 
   useEffect(() => {
     loadBlogs();

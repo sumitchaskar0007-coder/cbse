@@ -23,6 +23,8 @@ import Announcements from './pages/Announcements'
 import Career from './pages/Career'
 import InfoCenter from './pages/InfoCenter'
 import Contact from './pages/Contact'
+import HiddenDocuments from './pages/HiddenDocuments'
+import Udan from './pages/Udan'
 import Navbar from './components/Navbar'
 import Footer from './components/Footer'
 import ScrollToTop from "./components/ScrollToTop";
@@ -55,6 +57,9 @@ function App() {
             <Route path="/career" element={<Career />} />
             <Route path="/info-center" element={<InfoCenter />} />
             <Route path="/contact" element={<Contact />} />
+            <Route path="/udan" element={<Navigate to="/udan/1" replace />} />
+            <Route path="/udan/:id" element={<Udan />} />
+            <Route path="/mandatory-public-disclosure" element={<HiddenDocuments />} />
             <Route path="/blog" element={<Blog />} />
   <Route path="/blog/:id" element={<BlogDetail />} />
            <Route path="/admin/blogs/bulk" element={<BulkBlogAdmin />} />

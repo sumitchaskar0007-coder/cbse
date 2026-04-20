@@ -1,20 +1,19 @@
-import { useState, useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
-/* ⭐ NEWS TICKER */
 const NewsTicker = () => {
   const news = [
-    "Admissions Open for 2026–27",
-    "Join Our School Community – Admissions Open",
+    "Admissions Open for 2026-27",
+    "Join Our School Community - Admissions Open",
   ];
 
   return (
-    <div className="bg-blue-600 text-white py-2 overflow-hidden">
-      <div className="animate-scroll whitespace-nowrap font-semibold text-sm md:text-base">
+    <div className="overflow-hidden bg-blue-600 py-2 text-white">
+      <div className="animate-scroll whitespace-nowrap text-sm font-semibold md:text-base">
         {news.map((item, index) => (
           <span key={index} className="mx-10">
-            • {item}
+            * {item}
           </span>
         ))}
       </div>
@@ -22,16 +21,18 @@ const NewsTicker = () => {
   );
 };
 
-/* ⭐ NAVBAR */
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [academicsOpen, setAcademicsOpen] = useState(false);
+  const [desktopDropdown, setDesktopDropdown] = useState(null);
   const location = useLocation();
+  const isUdanPath = location.pathname.startsWith("/udan");
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 10);
     window.addEventListener("scroll", onScroll);
+
     return () => window.removeEventListener("scroll", onScroll);
   }, []);
 
@@ -40,6 +41,15 @@ const Navbar = () => {
     { label: "About", path: "/about" },
     { label: "Why Jadhavar", path: "/why-jadhavar" },
     { label: "Curriculum", path: "/curriculum" },
+    {
+      label: "Udan",
+      dropdown: true,
+      type: "udan",
+      items: Array.from({ length: 8 }, (_, index) => ({
+        label: `Udan ${index + 1}`,
+        path: `/udan/${index + 1}`,
+      })),
+    },
     { label: "Admissions", path: "/admissions" },
     { label: "Life At Jadhavar", path: "/life-at-jadhavar" },
     { label: "Gallery", path: "/gallery" },
@@ -51,10 +61,7 @@ const Navbar = () => {
       label: "More",
       dropdown: true,
       items: [
-        {
-          label: "Academics",
-          isDropdownParent: true,
-        },
+        { label: "Academics", isDropdownParent: true },
         { label: "Facilities", path: "/facilities" },
         { label: "Info Center", path: "/info-center" },
       ],
@@ -62,13 +69,11 @@ const Navbar = () => {
   ];
 
   const academicsDropdown = [
-
     { label: "Syllabus", path: "/syllabus" },
     { label: "Departments", path: "/departments" },
     { label: "Academic Calendar", path: "/academic-calendar" },
   ];
 
-  // Close all dropdowns when clicking outside
   useEffect(() => {
     const handleClickOutside = () => {
       if (academicsOpen) {
@@ -82,83 +87,135 @@ const Navbar = () => {
 
   return (
     <nav
-      className={`fixed top-0 w-full z-50 transition-all duration-300 ${scrolled ? "bg-white shadow-md" : "bg-white/95"
-        }`}
+      className={`fixed top-0 z-50 w-full transition-all duration-300 ${
+        scrolled ? "bg-white shadow-md" : "bg-white/95"
+      }`}
     >
-      {/* ⭐ NEWS TICKER */}
       <NewsTicker />
 
-      <div className="mx-auto max-w-[1400px] px-4 sm:px-6 py-2">
+      <div className="mx-auto max-w-[1400px] px-4 py-2 sm:px-6">
         <div className="flex items-center justify-between gap-4">
-          {/* LOGO */}
           <Link to="/" className="flex items-center">
             <img
               src="/images/logo1.png"
               alt="Logo"
-              className="w-16 h-16 sm:w-20 sm:h-20 object-contain"
+              className="h-16 w-16 object-contain sm:h-20 sm:w-20"
             />
           </Link>
 
-          {/* TITLE */}
-          <div className="flex flex-col items-center flex-1">
-            <h2 className="text-[20px] sm:text-[24px] md:text-[28px] font-bold text-primary text-center leading-tight">
+          <div className="flex flex-1 flex-col items-center">
+            <h2 className="text-center text-[20px] font-bold leading-tight text-primary sm:text-[24px] md:text-[28px]">
               Jadhavar International School & Jr. College
             </h2>
-            {/* <p className="text-[10px] sm:text-[11px] md:text-[12px] text-gray-600 -mt-1">
-              School & Jr. College
-            </p> */}
           </div>
 
-          {/* UDISE */}
-          <div className="hidden lg:block text-right min-w-[160px]">
+          <div className="hidden min-w-[160px] text-right lg:block">
             <p className="text-[12px] text-gray-500">
               <span className="font-semibold text-primary">UDISE:</span>
               27250509920
             </p>
           </div>
 
-          {/* MOBILE BUTTON */}
           <button
+            type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="lg:hidden ml-2 p-2 rounded-lg text-gray-700 hover:bg-gray-100"
+            className="ml-2 rounded-lg p-2 text-gray-700 hover:bg-gray-100 lg:hidden"
           >
-            <svg className="w-7 h-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg className="h-7 w-7" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               {isOpen ? (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M6 18L18 6M6 6l12 12"
+                />
               ) : (
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M4 6h16M4 12h16M4 18h16"
+                />
               )}
             </svg>
           </button>
         </div>
 
-        {/* ⭐ DESKTOP NAVBAR */}
-        <div className="hidden lg:flex items-center justify-center space-x-1 xl:space-x-3 pb-2 relative mt-2">
+        <div className="relative mt-2 hidden items-center justify-center space-x-1 pb-2 lg:flex xl:space-x-3">
           {mainNavLinks.map((link, index) => (
-            <div key={index} className="relative group">
-              {/* Normal Links */}
+            <div
+              key={index}
+              className="relative"
+              onMouseEnter={() => {
+                if (link.dropdown) {
+                  setDesktopDropdown(link.type || link.label);
+                }
+              }}
+              onMouseLeave={() => {
+                setDesktopDropdown(null);
+                setAcademicsOpen(false);
+              }}
+            >
               {!link.dropdown ? (
                 <Link
                   to={link.path}
-                  className={`px-3 py-2 text-[14px] font-medium rounded-md transition-all ${location.pathname === link.path
+                  className={`rounded-md px-3 py-2 text-[14px] font-medium transition-all ${
+                    location.pathname === link.path
                       ? "bg-primary text-white"
                       : "text-gray-700 hover:bg-gray-100"
-                    }`}
+                  }`}
                 >
                   {link.label}
                 </Link>
-              ) : (
+              ) : link.type === "udan" ? (
                 <>
-                  {/* More Dropdown Button */}
-                  <button className="px-3 py-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100 rounded-md flex items-center gap-1">
-                    {link.label} ▾
+                  <button
+                    type="button"
+                    className={`cursor-pointer rounded-md px-3 py-2 text-[14px] font-medium transition-all ${
+                      isUdanPath
+                        ? "bg-primary text-white"
+                        : "text-gray-700 hover:bg-gray-100"
+                    }`}
+                  >
+                    {link.label}
                   </button>
 
-                  {/* MAIN DROPDOWN - Shows on hover of "More" */}
-                  <div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-1 hidden group-hover:block bg-white shadow-lg rounded-md w-56 py-2 z-50">
+                  <div
+                    className={`absolute left-1/2 top-full z-50 mt-1 w-48 -translate-x-1/2 transform rounded-md bg-white py-2 shadow-lg ${
+                      desktopDropdown === link.type ? "block" : "hidden"
+                    }`}
+                  >
+                    {link.items.map((item, i) => (
+                      <Link
+                        key={i}
+                        to={item.path}
+                        className={`block px-4 py-2 text-sm transition ${
+                          location.pathname === item.path
+                            ? "bg-blue-50 text-primary"
+                            : "text-gray-700 hover:bg-gray-100 hover:text-primary"
+                        }`}
+                      >
+                        {item.label}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              ) : (
+                <>
+                  <button
+                    type="button"
+                    className="cursor-pointer rounded-md px-3 py-2 text-[14px] font-medium text-gray-700 hover:bg-gray-100"
+                  >
+                    {link.label}
+                  </button>
+
+                  <div
+                    className={`absolute left-1/2 top-full z-50 mt-1 w-56 -translate-x-1/2 transform rounded-md bg-white py-2 shadow-lg ${
+                      desktopDropdown === link.label ? "block" : "hidden"
+                    }`}
+                  >
                     {link.items.map((item, i) => (
                       <div key={i} className="relative">
-                        {/* Simple Links */}
                         {!item.isDropdownParent ? (
                           <Link
                             to={item.path}
@@ -167,22 +224,20 @@ const Navbar = () => {
                             {item.label}
                           </Link>
                         ) : (
-                          /* Academics item with clickable dropdown */
                           <div className="relative">
                             <button
+                              type="button"
                               onClick={(e) => {
                                 e.stopPropagation();
                                 setAcademicsOpen(!academicsOpen);
                               }}
-                              className="w-full text-left flex justify-between items-center px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 hover:text-primary cursor-pointer"
+                              className="flex w-full cursor-pointer items-center justify-between px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-100 hover:text-primary"
                             >
                               <span>{item.label}</span>
-                              <span className={`transform transition-transform ${academicsOpen ? 'rotate-180' : ''}`}>▾</span>
                             </button>
 
-                            {/* ACADEMICS SUB-DROPDOWN - Shows below when clicked */}
                             {academicsOpen && (
-                              <div className="absolute left-0 right-0 top-full mt-0 bg-white shadow-lg rounded-md py-2 z-50">
+                              <div className="absolute left-0 right-0 top-full z-50 mt-0 rounded-md bg-white py-2 shadow-lg">
                                 {academicsDropdown.map((sub, subIndex) => (
                                   <Link
                                     to={sub.path}
@@ -207,17 +262,16 @@ const Navbar = () => {
         </div>
       </div>
 
-      {/* ⭐ MOBILE MENU */}
       <AnimatePresence>
         {isOpen && (
           <motion.div
             initial={{ opacity: 0, height: 0 }}
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
-            className="lg:hidden bg-white shadow-md border-t overflow-y-auto max-h-[80vh]"
+            className="max-h-[80vh] overflow-y-auto border-t bg-white shadow-md lg:hidden"
           >
-            <div className="px-4 py-4 space-y-1">
-              <p className="text-[13px] text-gray-600 text-center pb-2 border-b mb-2">
+            <div className="space-y-1 px-4 py-4">
+              <p className="mb-2 border-b pb-2 text-center text-[13px] text-gray-600">
                 <span className="font-semibold text-primary">UDISE:</span>
                 27250509920
               </p>
@@ -228,26 +282,54 @@ const Navbar = () => {
                     <Link
                       to={link.path}
                       onClick={() => setIsOpen(false)}
-                      className={`block px-4 py-3 text-[15px] font-medium rounded-lg ${location.pathname === link.path
+                      className={`block rounded-lg px-4 py-3 text-[15px] font-medium ${
+                        location.pathname === link.path
                           ? "bg-primary text-white"
                           : "text-gray-700 hover:bg-gray-100"
-                        }`}
+                      }`}
                     >
                       {link.label}
                     </Link>
-                  ) : (
-                    <details
-                      className="group"
-                      onClick={(e) => e.stopPropagation()}
-                    >
-                      <summary className="px-4 py-3 cursor-pointer text-[15px] font-medium text-gray-700 hover:bg-gray-100 rounded-lg list-none">
-                        <div className="flex justify-between items-center">
+                  ) : link.type === "udan" ? (
+                    <details className="group" onClick={(e) => e.stopPropagation()}>
+                      <summary
+                        className={`list-none cursor-pointer rounded-lg px-4 py-3 text-[15px] font-medium ${
+                          isUdanPath
+                            ? "bg-primary text-white"
+                            : "text-gray-700 hover:bg-gray-100"
+                        }`}
+                      >
+                        <div className="flex items-center">
                           <span>{link.label}</span>
-                          <span className="transition-transform group-open:rotate-180">▾</span>
                         </div>
                       </summary>
 
-                      <div className="ml-4 mt-1 space-y-1 pb-2 border-l pl-2">
+                      <div className="ml-4 mt-1 space-y-1 border-l pl-2">
+                        {link.items.map((item, i) => (
+                          <Link
+                            key={i}
+                            to={item.path}
+                            onClick={() => setIsOpen(false)}
+                            className={`block rounded-md px-3 py-2 text-[14px] ${
+                              location.pathname === item.path
+                                ? "bg-blue-50 text-primary"
+                                : "text-gray-700 hover:bg-gray-100"
+                            }`}
+                          >
+                            {item.label}
+                          </Link>
+                        ))}
+                      </div>
+                    </details>
+                  ) : (
+                    <details className="group" onClick={(e) => e.stopPropagation()}>
+                      <summary className="list-none cursor-pointer rounded-lg px-4 py-3 text-[15px] font-medium text-gray-700 hover:bg-gray-100">
+                        <div className="flex items-center">
+                          <span>{link.label}</span>
+                        </div>
+                      </summary>
+
+                      <div className="ml-4 mt-1 space-y-1 border-l pb-2 pl-2">
                         {link.items.map((item, i) => (
                           <div key={i}>
                             {!item.isDropdownParent ? (
@@ -259,19 +341,17 @@ const Navbar = () => {
                                 {item.label}
                               </Link>
                             ) : (
-                              /* Academics dropdown for mobile - works with details/summary */
                               <details className="mt-1">
                                 <summary
-                                  className="px-3 py-2 cursor-pointer text-[14px] text-gray-700 hover:bg-gray-100 rounded-md list-none"
+                                  className="list-none cursor-pointer rounded-md px-3 py-2 text-[14px] text-gray-700 hover:bg-gray-100"
                                   onClick={(e) => e.stopPropagation()}
                                 >
-                                  <div className="flex justify-between items-center">
+                                  <div className="flex items-center">
                                     <span>{item.label}</span>
-                                    <span className="transition-transform">▾</span>
                                   </div>
                                 </summary>
 
-                                <div className="ml-4 mt-1 space-y-1 bg-gray-50 rounded-md p-2">
+                                <div className="ml-4 mt-1 space-y-1 rounded-md bg-gray-50 p-2">
                                   {academicsDropdown.map((sub, subIndex) => (
                                     <Link
                                       key={subIndex}
@@ -306,12 +386,12 @@ const Navbar = () => {
             transform: translateX(-50%);
           }
         }
+
         .animate-scroll {
-          animation: scroll 30s linear infinite;
           display: inline-block;
+          animation: scroll 30s linear infinite;
         }
-        
-        /* Prevent body scroll when mobile menu is open */
+
         body:has(.lg\\:hidden .max-h-\\[80vh\\]) {
           overflow: hidden;
         }
